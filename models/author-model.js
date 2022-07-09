@@ -1,11 +1,15 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// import Article from "../models/article-model";
 const File = new Schema({
   filename: { type: String, required: false },
-  data: { type: String, required: false }
-})
+  data: { type: String, required: false },
+});
+
+const Notification = new Schema({
+  id: { type: Number, required: true },
+  message: { type: String, required: true },
+});
 
 const Author = new Schema(
   {
@@ -20,9 +24,9 @@ const Author = new Schema(
     readers: { type: String, required: false },
     times_cited: { type: Number, required: true },
     popularCategories: { type: Array, required: false },
-    //articles: { type: Array, required: false },
+    notifications: { type: Array, required: false },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("authors", Author);
+module.exports = mongoose.model('authors', Author);
