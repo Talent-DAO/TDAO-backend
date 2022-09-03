@@ -47,7 +47,6 @@ getArticles = async (req, res) => {
 };
 
 getLatestArticles = async (req, res) => {
-  // {}, {}, { sort: { 'created_at': -1 } }
   await Article.find({}, {}, { sort: { 'created_at': -1 } }, (err, articles) => {
     if (err) {
       return res.status(400).json({success: false, error: err})

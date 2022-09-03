@@ -1,24 +1,29 @@
 const Author = require("../models/author-model");
 
 createAuthor = (req, res) => {
-  Author.create({
-    username: req.body.username,
-    bio: req.body.bio,
-    aboutme: req.body.aboutme,
-    twitter: req.body.twitter,
-    linkedin: req.body.linkedin,
-    walletId: req.body.walletId,
-    authorImage: req.body.authorImage,
-    coverImage: req.body.coverImage,
-    readers: req.body.readers,
-    times_cited: req.body.times_cited,
-    popularCategories: req.body.popularCategories
-  }, (err) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err });
+  Author.create(
+    {
+      username: req.body.username,
+      bio: req.body.bio,
+      aboutme: req.body.aboutme,
+      twitter: req.body.twitter,
+      linkedin: req.body.linkedin,
+      walletId: req.body.walletId,
+      authorImage: req.body.authorImage,
+      coverImage: req.body.coverImage,
+      readers: req.body.readers,
+      times_cited: req.body.times_cited,
+      popularCategories: req.body.popularCategories,
+    },
+    (err) => {
+      if (err) {
+        return res.status(400).json({ success: false, error: err });
+      }
+      return res
+        .status(200)
+        .json({ success: true, data: "Author was created successfully." });
     }
-    return res.status(200).json({ success: true, data: "Author was created successfully." });
-  })
+  );
 };
 
 deleteAuthor = async (req, res) => {
@@ -29,47 +34,68 @@ deleteAuthor = async (req, res) => {
     return res
       .status(200)
       .json({ success: true, data: "Author was deleted successfully." });
-  }).clone().catch((err) => console.error(err));
+  })
+    .clone()
+    .catch((err) => console.error(err));
 };
 
 updateAuthorReaders = async (req, res) => {
-  await Author.updateOne({ walletId: req.body.walletId }, { readers: req.body.readers }, (err, author) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err })
+  await Author.updateOne(
+    { walletId: req.body.walletId },
+    { readers: req.body.readers },
+    (err, author) => {
+      if (err) {
+        return res.status(400).json({ success: false, error: err });
+      }
+      return res.status(200).json({ success: true, data: author });
     }
-    return res.status(200).json({ success: true, data: author });
-  }).clone().catch((err) => console.error(err));
+  )
+    .clone()
+    .catch((err) => console.error(err));
 };
 
 updateAuthor = async (req, res) => {
-  await Author.updateOne({ _id: req.body.id }, {
-    username: req.body.username,
-    bio: req.body.bio,
-    aboutme: req.body.aboutme,
-    twitter: req.body.twitter,
-    linkedin: req.body.linkedin,
-    walletId: req.body.tipAddress,
-    authorImage: req.body.authorImage,
-    coverImage: req.body.authorCoverImage,
-    readers: req.body.readers,
-    times_cited: req.body.times_cited,
-    popularCategories: req.body.popularCategories
-  }, (err, author) => {
-    if(err) {
-      return res.status(400).json({success: false, error: err})
+  await Author.updateOne(
+    { _id: req.body.id },
+    {
+      username: req.body.username,
+      bio: req.body.bio,
+      aboutme: req.body.aboutme,
+      twitter: req.body.twitter,
+      linkedin: req.body.linkedin,
+      walletId: req.body.tipAddress,
+      authorImage: req.body.authorImage,
+      coverImage: req.body.authorCoverImage,
+      readers: req.body.readers,
+      times_cited: req.body.times_cited,
+      popularCategories: req.body.popularCategories,
+      notifications: req.body.notifications,
+    },
+    (err, author) => {
+      if (err) {
+        return res.status(400).json({ success: false, error: err });
+      }
+      return res.status(200).json({ success: true, data: author });
     }
-    return res.status(200).json({success: true, data: author});
-  }).clone().catch((err) => console.error(err));
-}
+  )
+    .clone()
+    .catch((err) => console.error(err));
+};
 
 updateTimes = async (req, res) => {
-  await Author.updateOne({ walletId: req.body.walletId }, { times_cited: req.body.timesCited }, (err, author) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err })
+  await Author.updateOne(
+    { walletId: req.body.walletId },
+    { times_cited: req.body.timesCited },
+    (err, author) => {
+      if (err) {
+        return res.status(400).json({ success: false, error: err });
+      }
+      return res.status(200).json({ success: true, data: author });
     }
-    return res.status(200).json({ success: true, data: author });
-  }).clone().catch((err) => console.error(err));
-}
+  )
+    .clone()
+    .catch((err) => console.error(err));
+};
 
 getAuthors = async (req, res) => {
   await Author.find(req.query, (err, authors) => {
@@ -79,10 +105,12 @@ getAuthors = async (req, res) => {
     if (!authors.length) {
       return res
         .status(200)
-        .json({ success: false, error: "Authors not found" });
+        .json({ success: true, data: [] });
     }
     return res.status(200).json({ success: true, data: authors });
-  }).clone().catch((err) => console.error(err));
+  })
+    .clone()
+    .catch((err) => console.error(err));
 };
 
 getAuthorByWalletId = async (req, res) => {
@@ -96,13 +124,15 @@ getAuthorByWalletId = async (req, res) => {
         .json({ success: false, error: "Author not found" });
     }
     return res.status(200).json({ success: true, data: author });
-  }).clone().catch((err) => console.error(err));
+  })
+    .clone()
+    .catch((err) => console.error(err));
 };
 
 getAuthorsByField = async (req, res) => {
-  var { field, value } = req.query
-  var regex = { $regex: '.*' + value + '.*' };
-  var query = {}
+  var { field, value } = req.query;
+  var regex = { $regex: ".*" + value + ".*" };
+  var query = {};
   query[field] = regex;
 
   await Author.find(query, (err, author) => {
@@ -115,8 +145,10 @@ getAuthorsByField = async (req, res) => {
         .json({ success: false, error: `Author not found` });
     }
     return res.status(200).json({ success: true, data: author });
-  }).clone().catch((err) => console.error(err));
-}
+  })
+    .clone()
+    .catch((err) => console.error(err));
+};
 
 module.exports = {
   createAuthor,
